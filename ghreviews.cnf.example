@@ -1,0 +1,10 @@
+# https://www.amazon.com/gp/bestsellers/sporting-goods
+[xpath]
+items=//div[@id="gridItemRoot"]
+next=//a[contains(text(), "Next page")]
+score=.//i[contains(@class,"a-icon-star-small")]/span
+name=.//a[@class="a-link-normal"]/span/div
+
+reviews=.//div[@class="a-row"]//a[@class="a-link-normal"]/span
+rank=.//span[@class="zg-bdg-text"]
+desc=
