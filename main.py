@@ -17,17 +17,13 @@ from urllib.parse import urlparse
 import ghreviews
 import common_library
 import sqlitemodel
-import chromedriver
 import html
 from dotenv import load_dotenv
 load_dotenv()
 
-usage = 'Usage: python {} [--surl <surl>] [--cpath <cpath>] [--rdb <rdb>] [--help]'\
+usage = 'Usage: python {} [--cpath <cpath>] [--rdb <rdb>] [--help]'\
         .format(__file__)
 argparser = ArgumentParser(usage=usage)
-argparser.add_argument('-su', '--surl', type=str,
-                       dest='surl',
-                       help='start url')
 argparser.add_argument('-cp', '--cpath', type=str,
                        dest='cpath',
                        help='config path')
@@ -36,13 +32,12 @@ argparser.add_argument('-rd', '--rdb', type=str,
                        help='restore: overwrite remote db')
 args = argparser.parse_args()
 
-if not args.surl or not args.cpath:
-  print("set surl and cpath, exit")
+if not args.cpath:
+  print("required argument not set , exit")
   exit()
-surl = args.surl
 cpath = args.cpath
-sdomain = urlparse(surl).netloc.replace('.','')
-print("sdomain:",sdomain)
+#sdomain = urlparse(surl).netloc.replace('.','')
+#print("sdomain:",sdomain)
 
 rdbpath = ""
 if args.rdb:
@@ -60,17 +55,21 @@ if rdbpath != "":
 cmn.scpGetFile(shostname, spath, dbpath)
 
 dbm = sqlitemodel.SqliteModel(dbpath)
-cdriver = chromedriver.ChromeDriver()
-cghreviews = ghreviews.GhReviews(dbm, cdriver, basedir, rdbpath, cpath, sdomain)
-
-def getSrc(url):
-    if re.match("^(http|https):(\/|\/\/|)", url) is None:
-      url = "https://" + url
-    print("getSrc: " + url)
-    cghreviews.srcScrape(url)
+cghreviews = ghreviews.GhReviews(dbm, basedir, rdbpath, cpath)
 
 try:
-  getSrc(surl)
+  while True:
+    print("start in main.py while True")
+    cghreviews.backurls = []
+    cghreviews.fronturls = []
+    url = cghreviews.url
+    if re.match("^(http|https):(\/|\/\/|)", cghreviews.url) is None:
+      url = "https://" + cghreviews.url
+    cghreviews.srcScrape(url)
+    print("backurls start in main.py while True:",cghreviews.backurls)
+    for backurl in cghreviews.backurls:
+      print("backurl start in main.py while True:",backurl)
+      cghreviews.srcScrape(backurl, nexts=False)
 except KeyboardInterrupt:
   pass
 

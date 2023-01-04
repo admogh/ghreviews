@@ -6,17 +6,18 @@ So you could see historical data of the reviews.
 ## Usages
 
 ```python
-python -u main.py --surl "https://www.amazon.com/gp/bestsellers/sporting-goods" --cpath wwwamazoncom.cnf 
+python -u main.py --cpath wwwamazoncom.cnf 
 ```
-
-Set this to crontab, and you would get historical reviews.
 
 ## Setup
 
 ### create cnf
 * Example for https://www.amazon.com/gp/bestsellers/sporting-goods
 ```
-# https://www.amazon.com/gp/bestsellers/sporting-goods
+[default]
+url=https://www.amazon.com/gp/bestsellers/sporting-goods
+save_interval_minutes=1440
+
 [xpath]
 items=//div[@id="gridItemRoot"]
 next=//a[contains(text(), "Next page")]

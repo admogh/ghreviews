@@ -38,7 +38,7 @@ class ChromeDriver:
         chrome_option.add_argument(
             '--user-agent=' + user_agent[random.randrange(0, len(user_agent), 1)])
         self.driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_option)
-        self.driver.set_page_load_timeout(20)
+        self.driver.set_page_load_timeout(60)
     def __del__(self):
         self.driver.quit()
     def wait_scroll(self, tn, sn=0, lasten=0):
